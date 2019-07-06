@@ -6,9 +6,9 @@
  */
 
 export default {
-	screen: {
-		container: {
-			flex: 1
-		}
-	}
+  screen: {
+    container: {
+      flex: 1,
+    },
+  },
 };

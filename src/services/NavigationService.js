@@ -15,7 +15,7 @@ let navigator;
  * @param  {ref} navigatorRef referencia da instancia de navegacao
  */
 function setTopLevelNavigator(navigatorRef) {
-	navigator = navigatorRef;
+  navigator = navigatorRef;
 }
 
 /**
@@ -24,12 +24,12 @@ function setTopLevelNavigator(navigatorRef) {
  * @param  {any} params    {description}
  */
 function navigate(routeName, params) {
-	navigator.dispatch(
-		NavigationActions.navigate({
-			routeName,
-			params
-		})
-	);
+  navigator.dispatch(
+    NavigationActions.navigate({
+      routeName,
+      params,
+    }),
+  );
 }
 
 /**
@@ -41,22 +41,22 @@ function navigate(routeName, params) {
  * @param params Parametros da rota
  */
 function navigateAndReset(routeName, params) {
-	navigator.dispatch(
-		StackActions.reset({
-			index: 0,
-			key: null,
-			actions: [
-				NavigationActions.navigate({
-					routeName,
-					params
-				})
-			]
-		})
-	);
+  navigator.dispatch(
+    StackActions.reset({
+      index: 0,
+      key: null,
+      actions: [
+        NavigationActions.navigate({
+          routeName,
+          params,
+        }),
+      ],
+    }),
+  );
 }
 
 export default {
-	navigate,
-	navigateAndReset,
-	setTopLevelNavigator
+  navigate,
+  navigateAndReset,
+  setTopLevelNavigator,
 };

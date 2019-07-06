@@ -1,6 +1,11 @@
-import { put, call } from 'redux-saga/effects';
-import CryptoActions from '../actions/cryptoActions';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import { ExchangeService } from '../../services/ExchangeService';
+import {
+  fetchCoinDataFailure,
+  fetchCoinDataLoading,
+  fetchCoinDataSuccess,
+  FETCH_COIN_DATA_REQUEST,
+} from '../actions/cryptoActions';
 /**
  *
  * @see https://redux-saga.js.org/docs/basics/DispatchingActions.html
@@ -11,16 +16,20 @@ import { ExchangeService } from '../../services/ExchangeService';
  * Call eh "blocante" - a chamada eh resolvida e soh apos terminar o codigo continua
  * Put eh "nao blocante" - a chamada eh executada asyncrona
  */
-export function* fetchCoinData() {
-	// seta reducer para estado de loading
-	yield put(CryptoActions.fetchCoinDataLoading());
+function* fetchCoinData() {
+  // seta reducer para estado de loading
+  yield put(fetchCoinDataLoading());
 
-	// Fetch API
-	const coinData = yield call(ExchangeService.fetchCoinData);
+  // Fetch API
+  const coinData = yield call(ExchangeService.fetchCoinData);
 
-	if (coinData) {
-		yield put(CryptoActions.fetchCoinDataSuccess(coinData));
-	} else {
-		yield put(CryptoActions.fetchCoinDataFailure('Erro na chamada da API.'));
-	}
+  if (coinData) {
+    yield put(fetchCoinDataSuccess(coinData));
+  } else {
+    yield put(fetchCoinDataFailure('Erro na chamada da API.'));
+  }
+}
+
+export function* watchFetchCoinData() {
+  yield takeLatest(FETCH_COIN_DATA_REQUEST, fetchCoinData);
 }

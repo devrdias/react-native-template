@@ -3,7 +3,7 @@
  */
 
 export default {
-	baseMargin: 10,
-	largeMargin: 20,
-	smallMargin: 5
+  baseMargin: 10,
+  largeMargin: 20,
+  smallMargin: 5,
 };

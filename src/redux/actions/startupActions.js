@@ -1,9 +1,6 @@
-import { createActions } from 'reduxsauce';
+export const STARTUP = 'STARTUP';
 
-const { Types, Creators } = createActions({
-	// Acao disparada quando aplicacao eh iniciada
-	startup: null
+// Acao disparada quando aplicacao eh iniciada
+export const startup = () => ({
+  type: STARTUP,
 });
-
-export const StartupTypes = Types;
-export default Creators;

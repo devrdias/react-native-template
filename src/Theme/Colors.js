@@ -6,11 +6,11 @@
  */
 
 export default {
-	transparent: 'rgba(0,0,0,0)',
-	text: '#212529',
-	primary: '#007bff',
-	headerTintColor: '#007bff',
-	defaultBackground: '#fff',
-	success: '#28a745',
-	error: '#dc3545'
+  transparent: 'rgba(0,0,0,0)',
+  text: '#212529',
+  primary: '#007bff',
+  headerTintColor: '#007bff',
+  defaultBackground: '#fff',
+  success: '#28a745',
+  error: '#dc3545',
 };

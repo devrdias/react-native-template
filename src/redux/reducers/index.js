@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
-import { reducer as CryptoReducer } from './cryptoReducer';
+import CryptoReducer from './cryptoReducer';
+import LoadingReducer from './loadingReducer';
 
 /**
  * Registrar TODOS os reducers neste arquivo
@@ -7,5 +8,6 @@ import { reducer as CryptoReducer } from './cryptoReducer';
  * @see https://redux.js.org/api-reference/combinereducers
  */
 export default combineReducers({
-	crypto: CryptoReducer
+  api: LoadingReducer,
+  crypto: CryptoReducer,
 });

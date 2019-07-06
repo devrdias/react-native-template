@@ -1,13 +1,17 @@
-import React, { Component } from 'react';
-import { createStackNavigator } from 'react-navigation';
-import NavigationService from '../../services/NavigationService';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
-import styles from './RootScreenStyle';
-import CoinListScreen from '../../containers/CoinList/CoinListScreen';
-import SplashScreen from '../../containers/SplashScreen/SplashScreen';
-import { connect } from 'react-redux';
-import StartupActions from '../../redux/actions/startupActions';
+import {
+  createAppContainer,
+  createStackNavigator,
+  SafeAreaView,
+} from 'react-navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import Loading from '~/components/Loading';
+import { startup } from '../../redux/actions/startupActions';
+import NavigationService from '../../services/NavigationService';
 import Colors from '../../Theme/Colors';
+import CoinListScreen from '../CoinList/CoinListScreen';
+import SplashScreen from '../SplashScreen/SplashScreen';
 
 /**
  * a root screen contem a navegacao do app
@@ -18,68 +22,74 @@ import Colors from '../../Theme/Colors';
 // configuracao da Stack de navegacao
 // aplicas-se a todas as rotas
 const configureStack = {
-	// Splash screen é exibida por default durante a execucao do startup() saga
-	// ver definicao no arquivo StartupSaga.js
-	initialRouteName: 'SplashScreen',
-	// remove header de todas as telas
-	// https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
-	headerMode: 'none',
-	navigationOptions: {
-		translucent: 'true',
-		headerStyle: {
-			backgroundColor: Colors.defaultBackground,
-			elevation: 0,
-			paddingTop: 40
-		},
-		headerTitleStyle: {
-			textAlign: 'center',
-			fontFamily: 'Geomanist-Medium',
-			alignSelf: 'center'
-		},
-		headerTintColor: Colors.headerTintColor
-	}
+  // Splash screen é exibida por default durante a execucao do startup() saga
+  // ver definicao no arquivo StartupSaga.js
+  initialRouteName: 'SplashScreen',
+  // remove header de todas as telas
+  // https://reactnavigation.org/docs/en/stack-navigator.html#stacknavigatorconfig
+  headerMode: 'none',
+  navigationOptions: {
+    translucent: 'true',
+    headerStyle: {
+      backgroundColor: Colors.defaultBackground,
+      elevation: 0,
+      paddingTop: 40,
+    },
+    headerTitleStyle: {
+      textAlign: 'center',
+      fontFamily: 'Geomanist-Medium',
+      alignSelf: 'center',
+    },
+    headerTintColor: Colors.headerTintColor,
+  },
 };
 
 /**
- * Telas
+ * Root navigation
  */
-const AppNav = createStackNavigator(
-	{
-		SplashScreen: SplashScreen,
-		MainScreen: CoinListScreen
-	},
-	configureStack
+const RootNavigator = createStackNavigator(
+  {
+    SplashScreen,
+    MainScreen: CoinListScreen,
+  },
+  configureStack,
 );
 
-class RootScreen extends Component {
-	componentDidMount() {
-		// Executa startup saga quando aplicacao inicia
-		this.props.startup();
-	}
+/**
+ * Configure App Container - for react-navigation 3+
+ */
+const AppContainer = createAppContainer(RootNavigator);
 
-	render() {
-		return (
-			<View style={styles.container}>
-				<AppNav
-					// Utilizando NavigationService para permitir navegar de onde navigation props nao for acessível
-					// Permite navegar direto de um Saga, por exemplo
-					// NavigationService (https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html)
-					ref={navigatorRef => {
-						NavigationService.setTopLevelNavigator(navigatorRef);
-					}}
-				/>
-			</View>
-		);
-	}
-}
+/**
+ * Define main RootScreen component
+ */
+const RootScreen = () => {
+  // TODO: create a api call reducer, to keep track of running tasks
+  const { loading } = useSelector(state => state.api);
+  const dispatch = useDispatch();
 
-const mapStateToProps = state => ({});
+  useEffect(() => {
+    // Executa startup saga quando aplicacao inicia
+    dispatch(startup());
+  }, []);
 
-const mapDispatchToProps = dispatch => ({
-	startup: () => dispatch(StartupActions.startup())
-});
+  return (
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: Colors.defaultBackground }}
+    >
+      <View style={{ flex: 1 }}>
+        <Loading visible={loading} animation="fade" />
+        <AppContainer
+          // Utilizando NavigationService para permitir navegar de onde navigation props nao for acessível
+          // Permite navegar direto de um Saga, por exemplo
+          // NavigationService (https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html)
+          ref={(navigatorRef) => {
+            NavigationService.setTopLevelNavigator(navigatorRef);
+          }}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(RootScreen);
+export default RootScreen;

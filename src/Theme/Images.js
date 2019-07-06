@@ -3,5 +3,5 @@
  */
 
 export default {
-	logo: require('../Images/splashScreen.jpg')
+  logo: require('../Images/splashScreen.jpg'),
 };

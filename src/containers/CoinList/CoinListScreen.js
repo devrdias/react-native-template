@@ -1,88 +1,70 @@
-import CryptoActions from '../../redux/actions/cryptoActions';
 import { PropTypes } from 'prop-types';
-import React from 'react';
-import { Button, Text, View, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import Style from './CoinListScreenStyle';
+import React, { useEffect } from 'react';
+import {
+  Button, ScrollView, Text, View,
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import CoinCard from '../../components/CoinCard/CoinCard';
-import Spinner from 'react-native-loading-spinner-overlay';
+import { fetchCoinData } from '../../redux/actions/cryptoActions';
+import Style from './CoinListScreenStyle';
 
-class CoinListScreen extends React.Component {
-	componentDidMount() {
-		this.props.fetchCoinData();
-	}
+const CoinListScreen = () => {
+  const { coinData, coinDataErrorMessage, coinDataIsLoading } = useSelector(
+    state => state.crypto,
+  );
+  // const dispatch = useDispatch();
+  // const { loading } = useSelector(state => state);
+  const dispatch = useDispatch();
 
-	renderCoinCards() {
-		const { coinList = [] } = this.props;
+  useEffect(() => {
+    dispatch(fetchCoinData());
+  }, []);
 
-		return (
-			coinList &&
-			coinList.map((coin, index) => {
-				return (
-					<CoinCard
-						key={index}
-						coinName={coin.name}
-						symbol={coin.symbol}
-						priceUsd={coin.quotes['USD'].price}
-						percentChange24h={coin.quotes['USD'].percent_change_24h}
-						percentChange7d={coin.quotes['USD'].percent_change_7d}
-					/>
-				);
-			})
-		);
-	}
+  const renderCoinCards = () => coinData.map((coin, index) => (
+    <CoinCard
+      key={index}
+      coinName={coin.name}
+      symbol={coin.symbol}
+      priceUsd={coin.quotes.USD.price}
+      percentChange24h={coin.quotes.USD.percent_change_24h}
+      percentChange7d={coin.quotes.USD.percent_change_7d}
+    />
+  ));
 
-	render() {
-		const { coinDataErrorMessage, coinDataIsLoading } = this.props;
-		console.log('coinDataIsLoading: ', coinDataIsLoading);
+  const renderErrorMessage = () => (
+    <Text style={{ color: 'red' }}>{coinDataErrorMessage}</Text>
+  );
 
-		return (
-			<View style={{ flexDirection: 'column', justifyContent: 'flex-end' }}>
-				{/* {coinDataIsLoading && (
-					<View>
-						<Spinner
-							visible={coinDataIsLoading}
-							textContent="Loading..."
-							textStyle={{ color: '#253145' }}
-							animation="fade"
-						/>
-					</View>
-				)} */}
+  const onPressButton = () => {
+    dispatch(fetchCoinData());
+  };
 
-				<ScrollView contentContainerStyle={Style.contentContainer}>
-					{this.renderCoinCards()}
-				</ScrollView>
-				<View>
-					<Button onPress={this.props.fetchCoinData} title="Refresh" />
-				</View>
-			</View>
-		);
-	}
-}
+  return (
+    <View style={{ flexDirection: 'column', justifyContent: 'flex-end' }}>
+      <ScrollView contentContainerStyle={Style.contentContainer}>
+        {renderErrorMessage()}
+        {renderCoinCards()}
+      </ScrollView>
+      <View>
+        <Button onPress={onPressButton} title="Refresh" />
+      </View>
+    </View>
+  );
+};
 
 /**
  * Definir proptypes para todos componentes ou telas
  */
 CoinListScreen.propsTypes = {
-	coinData: PropTypes.array,
-	coinDataErrorMessage: PropTypes.string,
-	coinDataIsLoading: PropTypes.bool
+  coinData: PropTypes.array,
+  coinDataErrorMessage: PropTypes.string,
+  coinDataIsLoading: PropTypes.bool,
 };
 
-const mapStateToProps = ({ crypto }) => {
-	debugger;
-	return {
-		coinList: crypto.coinData,
-		coinDataErrorMessage: crypto.coinDataErrorMessage,
-		coinDataIsLoading: crypto.coinDataIsLoading
-	};
+CoinListScreen.defaultProps = {
+  coinData: [],
+  coinDataErrorMessage: ' ',
+  coinDataIsLoading: false,
 };
 
-const mapDispatchToProps = dispatch => ({
-	fetchCoinData: () => dispatch(CryptoActions.fetchCoinData())
-});
-
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(CoinListScreen);
+export default CoinListScreen;

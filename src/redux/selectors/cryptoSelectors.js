@@ -3,8 +3,4 @@
  * Selectors podem ser utilizados em componentes ou em Sagas
  */
 
-export const getPriceDirection = state => {
-	return state.coinData.quotes['USD'].price && state.coinData.quotes['USD'].price > 0
-		? 'BULLISH'
-		: 'BEARISH';
-};
+export const getPriceDirection = state => (state.coinData.quotes.USD.price && state.coinData.quotes.USD.price > 0 ? 'BULLISH' : 'BEARISH');
