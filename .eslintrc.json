@@ -31,9 +31,10 @@
     "global-require": "off",
     "react-native/no-raw-text": "off",
     "react/forbid-prop-types": ["off", { "forbid": [] }],
-    "no-console": 0,
+    "no-console": "off",
     "import/no-extraneous-dependencies": "off",
-    "max-len": 0
+    "max-len": "off",
+    "react-native/no-inline-styles": "off"
   },
   "settings": {
     "import/resolver": {

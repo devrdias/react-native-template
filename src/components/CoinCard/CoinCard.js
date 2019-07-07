@@ -1,12 +1,14 @@
-import React from "react";
-import { View, Text, Image } from "react-native";
-import { coinIcons } from "../../Images/CoinIcons";
-import Style from "./CoinCardStyle";
+import React from 'react';
+import { View, Text, Image } from 'react-native';
+import { coinIcons } from '../../Images/CoinIcons';
+import Style from './CoinCardStyle';
 
-const CoinCard = ({ coinName, symbol, priceUsd, percentChange24h }) => (
+const CoinCard = ({
+  coinName, symbol, priceUsd, percentChange24h,
+}) => (
   <View style={Style.container}>
     <View
-      style={{ flex: 1, flexDirection: "row", justifyContent: "flex-start" }}
+      style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start' }}
     >
       <Image style={Style.image} source={{ uri: coinIcons[symbol] }} />
       <Text style={Style.coinSymbol}>{symbol}</Text>
@@ -16,9 +18,9 @@ const CoinCard = ({ coinName, symbol, priceUsd, percentChange24h }) => (
 
     <View
       style={{
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        alignContent: "center"
+        flexDirection: 'column',
+        justifyContent: 'flex-end',
+        alignContent: 'center',
       }}
     >
       <Text style={Style.coinPrice}>
@@ -34,8 +36,8 @@ const CoinCard = ({ coinName, symbol, priceUsd, percentChange24h }) => (
               : Style.percentChangePlus
           }
         >
-          {" "}
-          {percentChange24h} %{" "}
+          {' '}
+          {percentChange24h} %{' '}
         </Text>
       </Text>
     </View>
